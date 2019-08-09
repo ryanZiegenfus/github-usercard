@@ -4,39 +4,35 @@
 */
 axios.get('https://api.github.com/users/ryanZiegenfus')
   .then(response => {
-    console.log(response);
     cardsDiv.appendChild(cardCreator(response.data));
+    console.log(response);
   })
   .catch(err => {
     console.log(err);
   })
 
 const followersArray = [];
+const urlArray = [];
 
 axios.get('https://api.github.com/users/ryanZiegenfus/followers')
-.then(response => {
-  console.log(response);
-  response.data.forEach( element =>{
-    axios.get(`${response.data.element.url}`)
-   .then(response => {
+  .then(response => {
     console.log(response);
-    cardsDiv.appendChild(cardCreator(response.data));
+    response.data.forEach((element) => {
+      urlArray.push(`${element.url}`)
+    })
+    urlArray.forEach((element) => {
+      axios.get(element)
+        .then(response => {
+          cardsDiv.appendChild(cardCreator(response.data));
+        })
+        .catch(err => {
+          console.log(err);
+        })
+    })
   })
   .catch(err => {
     console.log(err);
-  })
-    followersArray.push(element);
-  })
-  followersArray.forEach(element => {
-    cardsDiv.appendChild(cardCreator(element));
-  })
 })
-.catch(err => {
-  console.log(err);
-})
-
-console.log(followersArray);
-
 
 
 
@@ -118,8 +114,8 @@ function cardCreator (obj) {
         userName.textContent = `${obj.login}`;
         userLocation.textContent = `${obj.location}`;
         profileURL.textContent = `${obj.html_url}`;
-        followers.textContent = `${obj.followers}`;
-        following.textContent = `${obj.following}`;
+        followers.textContent = `Followers: ${obj.followers}`;
+        following.textContent = `Following: ${obj.following}`;
         bio.textContent = `${obj.bio}`;
 
   return cardDiv;
