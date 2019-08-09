@@ -2,6 +2,7 @@
            (replacing the palceholder with your Github name):
            https://api.github.com/users/<your name>
 */
+
 axios.get('https://api.github.com/users/ryanZiegenfus')
   .then(response => {
     cardsDiv.appendChild(cardCreator(response.data));
@@ -117,6 +118,10 @@ function cardCreator (obj) {
         followers.textContent = `Followers: ${obj.followers}`;
         following.textContent = `Following: ${obj.following}`;
         bio.textContent = `${obj.bio}`;
+
+        cardDiv.addEventListener('click', () => {
+          window.open(`${obj.html_url}`);
+        })
 
   return cardDiv;
 }
